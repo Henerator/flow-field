@@ -2,6 +2,22 @@ let screenSize;
 let flowField;
 let particles = [];
 
+const FPSManager = {
+    interval: 1000,
+    lastTime: new Date(),
+    frames: 0,
+    count: 0,
+    update: function() {
+        this.count++;
+        const time = new Date();
+        if (time - this.lastTime > this.interval) {
+            this.frames = this.count;
+            this.count = 0;
+            this.lastTime = time;
+        }
+    }
+};
+
 const settings = {
     count: 200,
     xStep: 0.1,
@@ -48,8 +64,8 @@ function generateGUISettings() {
         clearCanvas();
     });
     gui.add(settings, 'showMagic').onChange(clearCanvas);
-    gui.add(settings, 'showField');
-    gui.add(settings, 'showFPS');
+    gui.add(settings, 'showField').onChange(clearCanvas);
+    gui.add(settings, 'showFPS').onChange(clearFPS);
     gui.add(settings, 'clear');
 }
 
@@ -93,11 +109,18 @@ function clearCanvas() {
     rect(0, 0, screenSize.width, screenSize.height);
 }
 
-function drawFPS() {
-    textSize(32);
+function clearFPS() {
     noStroke();
+    fill(settings.backgroundColor);
+    rect(10, 10, 35, 27);
+}
+
+function drawFPS() {
+    clearFPS()
+    noStroke();
+    textSize(32);
     fill('#ed225d');
-    text(Math.floor(frameRate()), 10, 35);
+    text(FPSManager.frames, 10, 35);
 }
 
 function drawFlowField() {
@@ -194,6 +217,8 @@ function updateParticles() {
 }
 
 function update() {
+    FPSManager.update();
+
     updateParticlesCount();
     udpateFlowField();
     updateParticles();
