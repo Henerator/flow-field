@@ -7,7 +7,7 @@ const settings = {
     xStep: 0.1,
     yStep: 0.1,
     zStep: 0.005,
-    cellForce: 1,
+    cellForce: 5,
     cellSize: 30,
     maxSpeed: 15,
     opacity: 5,
@@ -17,6 +17,7 @@ const settings = {
     showMagic: true,
     showField: false,
     showFPS: false,
+    clear: clearCanvas,
 };
 
 const gui = new dat.GUI();
@@ -49,8 +50,7 @@ function generateGUISettings() {
     gui.add(settings, 'showMagic').onChange(clearCanvas);
     gui.add(settings, 'showField');
     gui.add(settings, 'showFPS');
-
-    gui.re
+    gui.add(settings, 'clear');
 }
 
 function generateFlowField() {
